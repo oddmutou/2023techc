@@ -39,6 +39,19 @@ if (isset($_POST['body'])) {
 // いままで保存してきたものを取得
 $select_sth = $dbh->prepare('SELECT * FROM bbs_entries ORDER BY created_at DESC');
 $select_sth->execute();
+
+// bodyのHTMLを出力するための関数を用意する
+function bodyFilter (string $body): string
+{
+    $body = htmlspecialchars($body); // エスケープ処理
+    $body = nl2br($body); // 改行文字を<br>要素に変換
+
+    // >>1 といった文字列を該当番号の投稿へのページ内リンクとする (レスアンカー機能)
+    // 「>」(半角の大なり記号)は htmlspecialchars() でエスケープされているため注意
+    $body = preg_replace('/&gt;&gt;(\d+)/', '<a href="#entry$1">&gt;&gt;$1</a>', $body);
+
+    return $body;
+}
 ?>
 <head>
   <title>画像投稿できる掲示板</title>
@@ -57,13 +70,13 @@ $select_sth->execute();
 
 <?php foreach($select_sth as $entry): ?>
   <dl style="margin-bottom: 1em; padding-bottom: 1em; border-bottom: 1px solid #ccc;">
-    <dt>ID</dt>
+    <dt id="entry<?= htmlspecialchars($entry['id']) ?>">ID</dt>
     <dd><?= $entry['id'] ?></dd>
     <dt>日時</dt>
     <dd><?= $entry['created_at'] ?></dd>
     <dt>内容</dt>
     <dd>
-      <?= nl2br(htmlspecialchars($entry['body'])) // 必ず htmlspecialchars() すること ?>
+      <?= bodyFilter($entry['body']) ?>
       <?php if(!empty($entry['image_filename'])): // 画像がある場合は img 要素を使って表示 ?>
       <div>
         <img src="/image/<?= $entry['image_filename'] ?>" style="max-height: 10em;">

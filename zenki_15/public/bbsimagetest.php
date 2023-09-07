@@ -58,6 +58,12 @@ function bodyFilter (string $body): string
   <textarea name="body"></textarea>
   <div style="margin: 1em 0;">
     <input type="file" accept="image/*" name="image" id="imageInput">
+    <div id="imagePreviewArea" style="display: none;">
+      <div style="display: flex; align-items: start; margin: 1em 0;">
+        <span style="margin-right: 1em;">プレビュー:</span>
+        <canvas id="imagePreviewCanvas" style=""></canvas>
+      </div>
+    </div>
   </div>
   <input id="imageBase64Input" type="hidden" name="image_base64"><!-- base64を送る用のinput (非表示) -->
   <canvas id="imageCanvas" style="display: none;"></canvas><!-- 画像縮小に使うcanvas (非表示) -->
@@ -87,7 +93,12 @@ function bodyFilter (string $body): string
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const imageInput = document.getElementById("imageInput");
+  const previewArea = document.getElementById("imagePreviewArea"); // プレビューエリア(div)
+  const previewCanvas = document.getElementById("imagePreviewCanvas"); // プレビューを描画するcanvas
   imageInput.addEventListener("change", () => {
+    // プレビューエリアを一旦非表示に
+    previewArea.style.display = 'none';
+
     if (imageInput.files.length < 1) {
       // 未選択の場合
       return;
@@ -126,6 +137,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // canvasの内容をjpeg形式のbase64に変換しinputのvalueに設定
         imageBase64Input.value = canvas.toDataURL('image/jpeg', 0.9);
+
+        // プレビューエリアの display:none (非表示) を解除
+        previewArea.style.display = '';
+        // プレビューcanvasの高さを200px固定として、元画像の縦横比から横幅を設定
+        previewCanvas.height = canvas.height = '200';
+        previewCanvas.width = previewCanvas.height * originalWidth / originalHeight;
+        // プレビューcanvasへ画像を描画
+        const previewContext = previewCanvas.getContext("2d");
+        previewContext.drawImage(image, 0, 0, previewCanvas.width, previewCanvas.height);
       };
       image.src = reader.result;
     };

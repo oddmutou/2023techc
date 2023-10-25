@@ -20,7 +20,7 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
   }
 
   // パスワードが正しいかチェック
-  $correct_password = $_POST['password'] === $user['password'];
+  $correct_password = hash('sha256', $_POST['password']) === $user['password'];
 
   if (!$correct_password) {
     // パスワードが間違っていれば、処理を中断しエラー用クエリパラメータ付きのログイン画面URLにリダイレクト

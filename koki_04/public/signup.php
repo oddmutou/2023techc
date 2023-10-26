@@ -8,6 +8,13 @@ if (!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['password
   // ソルトを決める(ランダム)
   $salt = bin2hex(random_bytes(32));
 
+  // ストレッチング
+  $password_hash = $_POST['password'];
+  foreach (range(1, 100) as $count) {
+    // ソルトを追加してハッシュ化... を100回繰り返す
+    $password_hash = hash('sha256', $password_hash . $salt);
+  }
+
   // insertする
   $insert_sth = $dbh->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
   $insert_sth->execute([

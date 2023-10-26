@@ -20,7 +20,9 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
   }
 
   // パスワードが正しいかチェック
-  $correct_password = hash('sha256', $_POST['password']) === $user['password'];
+  $password_hash = mb_substr($user['password'], 0, 64); // 0文字目から64文字分がハッシュ
+  $salt = mb_substr($user['password'], 64, 64); // 64文字目から64文字分がソルト
+  $correct_password = hash('sha256', $_POST['password'] . $salt) === $password_hash;
 
   if (!$correct_password) {
     // パスワードが間違っていれば、処理を中断しエラー用クエリパラメータ付きのログイン画面URLにリダイレクト

@@ -5,12 +5,15 @@ $dbh = new PDO('mysql:host=mysql;dbname=techc', 'root', '');
 if (!empty($_POST['name']) && !empty($_POST['email']) && !empty($_POST['password'])) {
   // POSTで name と email と password が送られてきた場合はDBへの登録処理をする
 
+  // ソルトを決める(ランダム)
+  $salt = bin2hex(random_bytes(32));
+
   // insertする
   $insert_sth = $dbh->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
   $insert_sth->execute([
     ':name' => $_POST['name'],
     ':email' => $_POST['email'],
-    ':password' => hash('sha256', $_POST['password']),
+    ':password' => hash('sha256', $_POST['password'] . $salt) . $salt,
   ]);
 
   // 処理が終わったら完了画面にリダイレクト

@@ -30,3 +30,7 @@ if (empty($user)) {
     style="height: 5em; width: 5em; border-radius: 50%; object-fit: cover;">
   <?php endif; ?>
 </div>
+
+<div>
+  <?= nl2br(htmlspecialchars($user['introduction'] ?? '')) ?>
+</div>

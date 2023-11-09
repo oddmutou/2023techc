@@ -42,6 +42,9 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
 
 <h1>ログイン</h1>
 
+初めての人は<a href="/signup.php">会員登録</a>しましょう。
+<hr>
+
 <!-- ログインフォーム -->
 <form method="POST">
   <!-- input要素のtype属性は全部textでも動くが、適切なものに設定すると利用者は使いやすい -->

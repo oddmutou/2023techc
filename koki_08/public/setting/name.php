@@ -4,7 +4,7 @@ session_start();
 // セッションにログインIDが無ければ (=ログインされていない状態であれば) ログイン画面にリダイレクトさせる
 if (empty($_SESSION['login_user_id'])) {
   header("HTTP/1.1 302 Found");
-  header("Location: ./login.php");
+  header("Location: /login.php");
   return;
 }
 
@@ -28,10 +28,11 @@ if (isset($_POST['name'])) {
   ]);
   // 成功したら成功したことを示すクエリパラメータつきのURLにリダイレクト
   header("HTTP/1.1 302 Found");
-  header("Location: ./edit_name.php?success=1");
+  header("Location: /setting/name.php?success=1");
   return;
 }
 ?>
+<a href="./index.php">設定一覧に戻る</a>
 
 <h1>名前変更</h1>
 <form method="POST">

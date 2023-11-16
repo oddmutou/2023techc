@@ -59,6 +59,7 @@ function bodyFilter (string $body): string
 <?php if(empty($_SESSION['login_user_id'])): ?>
   投稿するには<a href="/login.php">ログイン</a>が必要です。
 <?php else: ?>
+  現在ログイン中 (<a href="/setting/index.php">設定画面はこちら</a>)
   <!-- フォームのPOST先はこのファイル自身にする -->
   <form method="POST" action="./bbs.php"><!-- enctypeは外しておきましょう -->
     <textarea name="body" required></textarea>

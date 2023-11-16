@@ -36,7 +36,7 @@ if (isset($_POST['body']) && !empty($_SESSION['login_user_id'])) {
 
 // 投稿データを取得。紐づく会員情報も結合し同時に取得する。
 $select_sth = $dbh->prepare(
-  'SELECT bbs_entries.*, users.name AS user_name'
+  'SELECT bbs_entries.*, users.name AS user_name, users.icon_filename AS user_icon_filename'
   . ' FROM bbs_entries INNER JOIN users ON bbs_entries.user_id = users.id'
   . ' ORDER BY bbs_entries.created_at DESC'
 );
@@ -84,6 +84,11 @@ function bodyFilter (string $body): string
       投稿者
     </dt>
     <dd>
+      <?php if(!empty($entry['user_icon_filename'])): // アイコン画像がある場合は表示 ?>
+      <img src="/image/<?= $entry['user_icon_filename'] ?>"
+        style="height: 2em; width: 2em; border-radius: 50%; object-fit: cover;">
+      <?php endif; ?>
+
       <?= htmlspecialchars($entry['user_name']) ?>
       (ID: <?= htmlspecialchars($entry['user_id']) ?>)
     </dd>

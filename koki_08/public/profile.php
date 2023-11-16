@@ -19,6 +19,7 @@ if (empty($user)) {
   return;
 }
 ?>
+<a href="/bbs.php">掲示板に戻る</a>
 
 <h1><?= htmlspecialchars($user['name']) ?> さん のプロフィール</h1>
 

@@ -84,13 +84,15 @@ function bodyFilter (string $body): string
       投稿者
     </dt>
     <dd>
-      <?php if(!empty($entry['user_icon_filename'])): // アイコン画像がある場合は表示 ?>
-      <img src="/image/<?= $entry['user_icon_filename'] ?>"
-        style="height: 2em; width: 2em; border-radius: 50%; object-fit: cover;">
-      <?php endif; ?>
+      <a href="/profile.php?user_id=<?= $entry['user_id'] ?>">
+        <?php if(!empty($entry['user_icon_filename'])): // アイコン画像がある場合は表示 ?>
+        <img src="/image/<?= $entry['user_icon_filename'] ?>"
+          style="height: 2em; width: 2em; border-radius: 50%; object-fit: cover;">
+        <?php endif; ?>
 
-      <?= htmlspecialchars($entry['user_name']) ?>
-      (ID: <?= htmlspecialchars($entry['user_id']) ?>)
+        <?= htmlspecialchars($entry['user_name']) ?>
+        (ID: <?= htmlspecialchars($entry['user_id']) ?>)
+      </a>
     </dd>
     <dt>日時</dt>
     <dd><?= $entry['created_at'] ?></dd>

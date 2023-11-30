@@ -32,6 +32,15 @@ $select_sth->execute([
 ?>
 <a href="/bbs.php">掲示板に戻る</a>
 
+<div style="
+    width: 100%; height: 15em;
+    <?php if(!empty($user['cover_filename'])): ?>
+    background: url('/image/<?= $user['cover_filename'] ?>') center;
+    background-size: cover;
+    <?php endif; ?>
+  ">
+</div>
+
 <h1><?= htmlspecialchars($user['name']) ?> さん のプロフィール</h1>
 
 <div>

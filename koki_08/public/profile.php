@@ -52,6 +52,14 @@ $select_sth->execute([
   <?php endif; ?>
 </div>
 
+<?php if(!empty($user['birthday'])): ?>
+<?php
+  $birthday = DateTime::createFromFormat('Y-m-d', $user['birthday']);
+  $today = new DateTime('now');
+?>
+  <?= $today->diff($birthday)->y ?>歳
+<?php endif; ?>
+
 <div>
   <?= nl2br(htmlspecialchars($user['introduction'] ?? '')) ?>
 </div>

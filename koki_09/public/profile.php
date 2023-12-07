@@ -45,6 +45,21 @@ if (!empty($_SESSION['login_user_id'])) { // ログインしている場合
   ]);
   $relationship = $select_sth->fetch();
 }
+
+// フォローされている状態を取得
+$follower_relationship = null;
+if (!empty($_SESSION['login_user_id'])) { // ログインしている場合
+  // フォローされている状態をDBから取得
+  $select_sth = $dbh->prepare(
+    "SELECT * FROM user_relationships"
+    . " WHERE follower_user_id = :follower_user_id AND followee_user_id = :followee_user_id"
+  );
+  $select_sth->execute([
+      ':follower_user_id' => $user['id'], // フォローしている側は閲覧しようとしているプロフィールの会員
+      ':followee_user_id' => $_SESSION['login_user_id'], // フォローされる側はログインしている会員
+  ]);
+  $follower_relationship = $select_sth->fetch();
+}
 ?>
 <a href="/bbs.php">掲示板に戻る</a>
 
@@ -75,6 +90,12 @@ if (!empty($_SESSION['login_user_id'])) { // ログインしている場合
 <?php else: // フォローしている場合 ?>
 <div>
   <?= $relationship['created_at'] ?> にフォローしました。
+</div>
+<?php endif; ?>
+
+<?php if(!empty($follower_relationship)): // フォローされている場合 ?>
+<div>
+  フォローされています。
 </div>
 <?php endif; ?>
 

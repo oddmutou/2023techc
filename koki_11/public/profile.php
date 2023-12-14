@@ -83,19 +83,27 @@ if (!empty($_SESSION['login_user_id'])) { // ログインしている場合
   <?php endif; ?>
 </div>
 
-<?php if(empty($relationship)): // フォローしていない場合 ?>
-<div>
-  <a href="./follow.php?followee_user_id=<?= $user['id'] ?>">フォローする</a>
+<?php if($user['id'] === $_SESSION['login_user_id']): // 自分自身の場合 ?>
+<div style="margin: 1em 0;">
+  これはあなたです！<br>
+  <a href="/setting/index.php">設定画面はこちら</a>
 </div>
-<?php else: // フォローしている場合 ?>
-<div>
-  <?= $relationship['created_at'] ?> にフォローしました。
-</div>
-<?php endif; ?>
-
-<?php if(!empty($follower_relationship)): // フォローされている場合 ?>
-<div>
-  フォローされています。
+<?php else: // 他人の場合 ?>
+<div style="margin: 1em 0;">
+  <?php if(empty($relationship)): // フォローしていない場合 ?>
+  <div>
+    <a href="./follow.php?followee_user_id=<?= $user['id'] ?>">フォローする</a>
+  </div>
+  <?php else: // フォローしている場合 ?>
+  <div>
+    <?= $relationship['created_at'] ?> にフォローしました。
+  </div>
+  <?php endif; ?>
+  <?php if(!empty($follower_relationship)): // フォローされている場合 ?>
+  <div>
+    フォローされています。
+  </div>
+  <?php endif; ?>
 </div>
 <?php endif; ?>
 

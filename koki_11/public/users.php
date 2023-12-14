@@ -10,6 +10,12 @@ $select_sth->execute();
 <body>
   <h1>会員一覧</h1>
 
+  <div style="margin-bottom: 1em;">
+    <a href="/setting/index.php">設定画面</a>
+    /
+    <a href="/timeline.php">タイムライン</a>
+  </div>
+
   <?php foreach($select_sth as $user): ?>
     <div style="display: flex; justify-content: start; align-items: center; padding: 1em 2em;">
       <?php if(empty($user['icon_filename'])): ?>

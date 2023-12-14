@@ -8,6 +8,11 @@ if (empty($_SESSION['login_user_id'])) { // 非ログインの場合利用不可
   return;
 }
 
+// 現在のログイン情報を取得する
+$user_select_sth = $dbh->prepare("SELECT * from users WHERE id = :id");
+$user_select_sth->execute([':id' => $_SESSION['login_user_id']]);
+$user = $user_select_sth->fetch();
+
 // 投稿処理
 if (isset($_POST['body']) && !empty($_SESSION['login_user_id'])) {
 
@@ -67,22 +72,25 @@ function bodyFilter (string $body): string
 }
 ?>
 
-<?php if(empty($_SESSION['login_user_id'])): ?>
-  投稿するには<a href="/login.php">ログイン</a>が必要です。
-<?php else: ?>
-  現在ログイン中 (<a href="/setting/index.php">設定画面はこちら</a>)
-  <!-- フォームのPOST先はこのファイル自身にする -->
-  <form method="POST" action="./timeline.php"><!-- enctypeは外しておきましょう -->
-    <textarea name="body" required></textarea>
-    <div style="margin: 1em 0;">
-      <input type="file" accept="image/*" name="image" id="imageInput">
-    </div>
-    <input id="imageBase64Input" type="hidden" name="image_base64"><!-- base64を送る用のinput (非表示) -->
-    <canvas id="imageCanvas" style="display: none;"></canvas><!-- 画像縮小に使うcanvas (非表示) -->
-    <button type="submit">送信</button>
-  </form>
-<?php endif; ?>
-<hr>
+<div>
+  現在 <?= htmlspecialchars($user['name']) ?> (ID: <?= $user['id'] ?>) さんでログイン中
+</div>
+<div style="margin-bottom: 1em;">
+  <a href="/setting/index.php">設定画面</a>
+  /
+  <a href="/users.php">会員一覧画面</a>
+</div>
+
+<!-- フォームのPOST先はこのファイル自身にする -->
+<form method="POST" action="./timeline.php"><!-- enctypeは外しておきましょう -->
+  <textarea name="body" required></textarea>
+  <div style="margin: 1em 0;">
+    <input type="file" accept="image/*" name="image" id="imageInput">
+  </div>
+  <input id="imageBase64Input" type="hidden" name="image_base64"><!-- base64を送る用のinput (非表示) -->
+  <canvas id="imageCanvas" style="display: none;"></canvas><!-- 画像縮小に使うcanvas (非表示) -->
+  <button type="submit">送信</button>
+</form>
 
 <?php foreach($select_sth as $entry): ?>
   <dl style="margin-bottom: 1em; padding-bottom: 1em; border-bottom: 1px solid #ccc;">

@@ -36,7 +36,7 @@ if (isset($_POST['body']) && !empty($_SESSION['login_user_id'])) {
   // 処理が終わったらリダイレクトする
   // リダイレクトしないと，リロード時にまた同じ内容でPOSTすることになる
   header("HTTP/1.1 302 Found");
-  header("Location: ./bbs.php");
+  header("Location: ./timeline.php");
   return;
 }
 
@@ -72,7 +72,7 @@ function bodyFilter (string $body): string
 <?php else: ?>
   現在ログイン中 (<a href="/setting/index.php">設定画面はこちら</a>)
   <!-- フォームのPOST先はこのファイル自身にする -->
-  <form method="POST" action="./bbs.php"><!-- enctypeは外しておきましょう -->
+  <form method="POST" action="./timeline.php"><!-- enctypeは外しておきましょう -->
     <textarea name="body" required></textarea>
     <div style="margin: 1em 0;">
       <input type="file" accept="image/*" name="image" id="imageInput">

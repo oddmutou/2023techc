@@ -61,7 +61,7 @@ if (!empty($_SESSION['login_user_id'])) { // ログインしている場合
   $follower_relationship = $select_sth->fetch();
 }
 ?>
-<a href="/bbs.php">掲示板に戻る</a>
+<a href="/timeline.php">タイムラインに戻る</a>
 
 <div style="
     width: 100%; height: 15em;

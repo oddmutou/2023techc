@@ -4,8 +4,23 @@ session_start();
 $dbh = new PDO('mysql:host=mysql;dbname=techc', 'root', '');
 
 // 会員データを取得
-$select_sth = $dbh->prepare('SELECT * FROM users ORDER BY id DESC');
-$select_sth->execute();
+$sql = 'SELECT * FROM users WHERE';
+$prepare_params = [];
+
+if (!empty($_GET['name'])) {
+  $sql .= ' name LIKE :name';
+  $prepare_params[':name'] = '%' . $_GET['name'] . '%';
+}
+
+if (empty($prepare_params)) {
+  // 検索がまったくない場合はWHERE句が空になってしまうため真となる適当な式を設定する
+  $sql .= ' 1 = 1';
+}
+
+$sql .= ' ORDER BY id DESC';
+
+$select_sth = $dbh->prepare($sql);
+$select_sth->execute($prepare_params);
 
 // ログインしている場合、フォローしている会員IDリストを取得
 $followee_user_ids = [];
@@ -32,6 +47,14 @@ if (!empty($_SESSION['login_user_id'])) {
     <a href="/setting/index.php">設定画面</a>
     /
     <a href="/timeline.php">タイムライン</a>
+  </div>
+
+  <div style="margin-bottom: 1em;">
+    絞り込み<br>
+    <form method="GET">
+      名前: <input type="text" name="name" value="<?= htmlspecialchars($_GET['name'] ?? '') ?>"><br>
+      <button type="submit">決定</button>
+    </form>
   </div>
 
   <?php foreach($select_sth as $user): ?>

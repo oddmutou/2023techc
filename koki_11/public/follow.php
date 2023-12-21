@@ -56,7 +56,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { // フォームでPOSTした場合�
 <div>
   <?= htmlspecialchars($followee_user['name']) ?> さんをフォローしました。<br>
   <a href="/profile.php?user_id=<?= $followee_user['id'] ?>">
-    <?= htmlspecialchars($followee_user['name']) ?> さんのプロフィールに戻る
+    <?= htmlspecialchars($followee_user['name']) ?> さんのプロフィールへ
+  </a>
+  /
+  <a href="/users.php">
+    会員一覧へ
   </a>
 </div>
 <?php else: ?>

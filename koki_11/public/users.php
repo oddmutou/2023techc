@@ -4,17 +4,25 @@ session_start();
 $dbh = new PDO('mysql:host=mysql;dbname=techc', 'root', '');
 
 // 会員データを取得
-$sql = 'SELECT * FROM users WHERE';
+$sql = 'SELECT * FROM users';
+$where_sql_array = [];
 $prepare_params = [];
 
 if (!empty($_GET['name'])) {
-  $sql .= ' name LIKE :name';
+  $where_sql_array[] = ' name LIKE :name';
   $prepare_params[':name'] = '%' . $_GET['name'] . '%';
 }
+if (!empty($_GET['year_from'])) {
+  $where_sql_array[] = ' birthday >= :year_from';
+  $prepare_params[':year_from'] = $_GET['year_from'] . '-01-01'; // 入力年の1月1日
+}
+if (!empty($_GET['year_until'])) {
+  $where_sql_array[] = ' birthday <= :year_until';
+  $prepare_params[':year_until'] = $_GET['year_until'] . '-12-31'; // 入力年の12月31日
+}
 
-if (empty($prepare_params)) {
-  // 検索がまったくない場合はWHERE句が空になってしまうため真となる適当な式を設定する
-  $sql .= ' 1 = 1';
+if (!empty($where_sql_array)) {
+  $sql .= ' WHERE ' . implode(' AND', $where_sql_array);
 }
 
 $sql .= ' ORDER BY id DESC';
@@ -53,6 +61,11 @@ if (!empty($_SESSION['login_user_id'])) {
     絞り込み<br>
     <form method="GET">
       名前: <input type="text" name="name" value="<?= htmlspecialchars($_GET['name'] ?? '') ?>"><br>
+      生まれ年:
+      <input type="number" name="year_from" value="<?= htmlspecialchars($_GET['year_from'] ?? '') ?>">年
+      ~
+      <input type="number" name="year_until" value="<?= htmlspecialchars($_GET['year_until'] ?? '') ?>">年
+      <br>
       <button type="submit">決定</button>
     </form>
   </div>
@@ -69,6 +82,7 @@ if (!empty($_SESSION['login_user_id'])) {
       <a href="/profile.php?user_id=<?= $user['id'] ?>" style="margin-left: 1em;">
         <?= htmlspecialchars($user['name']) ?>
       </a>
+
       <div style="margin-left: 2em;">
         <?php if($user['id'] === $_SESSION['login_user_id']): ?>
           これはあなたです!

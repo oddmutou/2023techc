@@ -72,7 +72,11 @@ if (isset($_POST['body']) && !empty($_SESSION['login_user_id'])) {
   <dd data-role="entryIdArea"></dd>
   <dt>投稿者</dt>
   <dd>
-    <a href="" data-role="entryUserAnchor"></a>
+    <a href="" data-role="entryUserAnchor">
+      <img data-role="entryUserIconImage"
+        style="height: 2em; width: 2em; border-radius: 50%; object-fit: cover;">
+      <span data-role="entryUserNameArea"></span>
+    </a>
   </dd>
   <dt>日時</dt>
   <dd data-role="entryCreatedAtArea"></dd>
@@ -103,8 +107,15 @@ document.addEventListener("DOMContentLoaded", () => {
       // 番号(ID)を表示
       entryCopied.querySelector('[data-role="entryIdArea"]').innerText = entry.id.toString();
 
+      // アイコン画像が存在する場合は表示 なければimg要素ごと非表示に
+      if (entry.user_icon_file_url !== undefined) {
+        entryCopied.querySelector('[data-role="entryUserIconImage"]').src = entry.user_icon_file_url;
+      } else {
+        entryCopied.querySelector('[data-role="entryUserIconImage"]').display = 'none';
+      }
+
       // 名前を表示
-      entryCopied.querySelector('[data-role="entryUserAnchor"]').innerText = entry.user_name;
+      entryCopied.querySelector('[data-role="entryUserNameArea"]').innerText = entry.user_name;
 
       // 名前のところのリンク先(プロフィール)のURLを設定
       entryCopied.querySelector('[data-role="entryUserAnchor"]').href = entry.user_profile_url;

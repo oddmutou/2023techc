@@ -115,6 +115,17 @@ document.addEventListener("DOMContentLoaded", () => {
       // 本文を表示 (ここはHTMLなのでinnerHTMLで)
       entryCopied.querySelector('[data-role="entryBodyArea"]').innerHTML = entry.body;
 
+      // 画像が存在する場合に本文の下部に画像を表示
+      if (entry.image_file_url !== undefined) {
+        const imageElement = new Image();
+        imageElement.src = entry.image_file_url; // 画像URLを設定
+        imageElement.style.display = 'block'; // ブロック要素にする (img要素はデフォルトではインライン要素のため)
+        imageElement.style.marginTop = '1em'; // 画像上部の余白を設定
+        imageElement.style.maxHeight = '300px'; // 画像を表示する最大サイズ(縦)を設定
+        imageElement.style.maxWidth = '300px'; // 画像を表示する最大サイズ(横)を設定
+        entryCopied.querySelector('[data-role="entryBodyArea"]').appendChild(imageElement); // 本文エリアに画像を追加
+      }
+
       // 最後に実際の描画を行う
       entriesRenderArea.appendChild(entryCopied);
     });

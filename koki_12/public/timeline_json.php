@@ -49,6 +49,7 @@ foreach ($select_sth as $entry) {
     'user_name' => $entry['user_name'],
     'user_profile_url' => '/profile.php?user_id=' . $entry['user_id'],
     'body' => bodyFilter($entry['body']),
+    'image_file_url' => empty($entry['image_filename']) ? '' : ('/image/' . $entry['image_filename']),
     'created_at' => $entry['created_at'],
   ];
   $result_entries[] = $result_entry;
